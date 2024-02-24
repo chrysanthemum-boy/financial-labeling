@@ -1,5 +1,5 @@
 """
-Django settings for financial_labeling_backend project.
+Django settings for config project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/2.0/topics/settings/
@@ -89,7 +89,7 @@ MIDDLEWARE = [
 
 
 ROOT_URLCONF = "financial_labeling_backend.urls"
-WSGI_APPLICATION = "financial_labeling_backend.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
 
 # Django templates
 TEMPLATES = [

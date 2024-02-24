@@ -9,7 +9,7 @@ import django
 from django.core import management
 from environs import Env
 
-from .financial_labeling_backend.celery import app
+from .config.celery import app
 
 env = Env()
 FINANCIAL_LABELING_HOME = os.path.expanduser(os.environ.get("FINANCIAL_LABELING_HOME", "~/financial_labeling"))
@@ -65,7 +65,7 @@ def run_on_nix(args):
 def run_on_windows(args):
     from waitress import serve
 
-    from financial_labeling_backend.wsgi import application
+    from config.wsgi import application
 
     serve(application, port=args.port, threads=args.workers)
 
