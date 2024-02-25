@@ -204,4 +204,4 @@ webpack-stats.json
 financial_labeling_backend/filepond-temp-uploads
 financial_labeling_backend/media
 financial_labeling_backend/*.sqlite3*
-financial_labeling_fronted/assets/fonts
+financial_labeling_frontend/assets/fonts
