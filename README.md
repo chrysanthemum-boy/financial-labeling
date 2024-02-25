@@ -10,7 +10,7 @@ python manage.py runserver
 ```
 ### Run celery server
 ```
-celery --app=financial_labeling_backend worker --loglevel=INFO --concurrency=1 -P eventlet
+celery --app=config worker --loglevel=INFO --concurrency=1 -P eventlet
 ```
 
 ### Django URL reference
