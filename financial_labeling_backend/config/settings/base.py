@@ -88,7 +88,7 @@ MIDDLEWARE = [
 ]
 
 
-ROOT_URLCONF = "financial_labeling_backend.urls"
+ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
 
 # Django templates

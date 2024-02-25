@@ -201,7 +201,7 @@ bundle/
 webpack-stats.json
 
 .vscode
-backend/filepond-temp-uploads
-backend/media
-backend/*.sqlite3*
-frontend/assets/fonts
+financial_labeling_backend/filepond-temp-uploads
+financial_labeling_backend/media
+financial_labeling_backend/*.sqlite3*
+financial_labeling_fronted/assets/fonts
