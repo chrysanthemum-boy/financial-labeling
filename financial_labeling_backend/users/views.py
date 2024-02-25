@@ -11,7 +11,7 @@ from projects.permissions import IsProjectAdmin
 
 
 class Me(APIView):
-    permission_classes = IsAuthenticated
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         serializer = UserSerializer(request.user, context={"request": request})

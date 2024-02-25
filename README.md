@@ -1,6 +1,8 @@
 # financial-labeling
 A system for automatic labeling of finance-related datasets.
+
 ## Django backend
+
 ### Run backend server
 ```
 python manage.py migrate
@@ -8,9 +10,10 @@ python manage.py create_roles
 python manage.py create_admin --noinput --username "admin" --email "admin@example.com" --password "password"
 python manage.py runserver
 ```
+
 ### Run celery server
 ```
-celery --app=financial_labeling_backend worker --loglevel=INFO --concurrency=1 -P eventlet
+celery --app=config worker --loglevel=INFO --concurrency=1 -P eventlet
 ```
 
 ### Django URL reference
