@@ -61,6 +61,7 @@ urlpatterns += [
     path("fann_v1/", include("projects.urls")),
     path("fann_v1/projects/<int:project_id>/metrics/", include("metrics.urls")),
     path("fann_v1/projects/<int:project_id>/", include("auto_labeling.urls")),
+    path("fann_v1/projects/<int:project_id>/", include("utils.urls")),
     path("fann_v1/projects/<int:project_id>/", include("labels.urls")),
     path("fann_v1/projects/<int:project_id>/", include("label_types.urls")),
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
