@@ -1,6 +1,6 @@
 <template>
   <section>
-    <v-parallax :src="require(`~/assets/vbanner.jpg`)" height="400" dark>
+    <v-parallax :src="require(`~/assets/background.jpg`)" height="400" dark>
       <v-container>
         <v-layout wrap align-center justify-center class="white--text">
           <v-flex xs12 md7>
@@ -13,7 +13,7 @@
             <div class="mt-4">
               <v-menu open-on-hover offset-y>
                 <template #activator="{ on }">
-                  <v-btn class="blue lighten-2" dark large v-on="on">
+                  <v-btn class="blue lighten-1" dark large v-on="on">
                     {{ $t('home.demoDropDown') }}
                     <v-icon>{{ mdiMenuDown }}</v-icon>
                   </v-btn>

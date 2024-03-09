@@ -1,5 +1,5 @@
 export default {
-  mainTitle: 'Text Annotation for Humans',
+  mainTitle: 'Multi-domain automatic labelling system',
   getStarted: 'Get Started',
   startAnnotation: 'Start Annotation',
   featuresTitle: 'The best features',

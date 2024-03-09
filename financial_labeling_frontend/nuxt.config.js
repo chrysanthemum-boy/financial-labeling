@@ -22,7 +22,7 @@ export default {
   },
 
   server: {
-    host: '0.0.0.0' // default: localhost
+    host: '0.0.0.0', // default: localhost
   },
 
   env: {

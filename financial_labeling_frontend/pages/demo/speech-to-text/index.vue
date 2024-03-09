@@ -42,13 +42,13 @@ export default {
         annotations: [
           {
             id: 17,
-            text: 'Hi! Welcome to doccano!',
+            text: 'Hi! Welcome to Multi-Auto-Labeling!',
             user: 1,
             document: 8
           }
         ],
         meta: {
-          url: 'https://github.com/doccano'
+          url: 'https://github.com/chrysanthemum-boy/financial-labeling'
         },
         annotation_approver: null
       },

@@ -1,5 +1,5 @@
 export default {
-  mainTitle: '文本标注平台',
+  mainTitle: '多领域自动标注系统',
   getStarted: '快速开始',
   startAnnotation: '开始标注',
   featuresTitle: '最大特色',
@@ -7,8 +7,8 @@ export default {
   featuresText1: '与你的团队标注',
   featuresTitle2: '任何语言',
   featuresText2: '用任何语言标注',
-  featuresTitle3: '免费开源',
-  featuresText3: '免费可自定义',
+  featuresTitle3: '金融语料',
+  featuresText3: '专为金融文本标注',
   footerTitle: '尽快实现你的想法',
   demoDropDown: '试一试',
   demoNER: '命名实体识别',

@@ -1,6 +1,6 @@
 export default {
   home: 'Accueil',
-  welcome: 'Bienvenue dans Doccano!',
+  welcome: 'Bienvenue dans Multi-Auto-Labeling!',
   importData: 'Importer un ensemble de données (Dataset)',
   createLabels: 'Créer des étiquettes pour ce projet',
   addMembers: 'Ajouter des membres pour un travail en collaboration',

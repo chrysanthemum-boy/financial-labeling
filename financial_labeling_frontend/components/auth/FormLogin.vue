@@ -1,4 +1,5 @@
 <template>
+
   <base-card
     :disabled="!valid"
     :title="$t('user.login')"
@@ -33,6 +34,7 @@
       </v-form>
     </template>
   </base-card>
+  
 </template>
 
 <script lang="ts">
