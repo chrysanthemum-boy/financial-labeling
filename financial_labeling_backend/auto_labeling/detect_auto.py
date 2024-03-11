@@ -7,11 +7,12 @@ import onnxruntime
 from PIL import Image
 # from tkinter import *
 # import PIL.Image
-
-# import os
-
+import io
+import os
+import natsort
+import requests
+import imghdr
 # from tkinter import filedialog
-# import natsort
 # from xml.etree import ElementTree as ET
 # from ultralytics import YOLO
 
@@ -520,22 +521,43 @@ class YOLOv8:
         self.output_names = [model_outputs[i].name for i in range(len(model_outputs))]
 
 
+def run_detect(model_path, image_dir_path, conf_thres, iou_thres):
+    yolov8_detector = YOLOv8(model_path, conf_thres=conf_thres, iou_thres=iou_thres)
+    IMAGES_LIST = os.listdir(image_dir_path)
+    imgs = []
+    for image_dir in natsort.natsorted(IMAGES_LIST):
+        if os.path.isdir(image_dir_path + image_dir):
+            image_name = os.listdir(image_dir_path + image_dir)
+            if len(image_name):
+                image_file = requests.get('http://localhost:8000/media/' + os.path.join(image_dir,image_name[0]))
+                imgtype = imghdr.what(None, image_file.content)
+                if imgtype in ('jpg', 'png', 'jpeg', 'bmp'):
+                    imgs.append(np.array(Image.open(io.BytesIO(image_file.content))))
+    res_all = []
+    for img in imgs:
+        res = []
+        boxes, scores, class_ids = yolov8_detector(img)
+        for i in range(len(class_ids)):
+            res.append([class_ids[i], scores[i], boxes[i]])
+        res_all.append(res)
+    return res_all
+
 if __name__ == '__main__':
     # detector = Detector()
     # detector.client()
     model_path = "auto_models/models/yanbao_paper30_CDLA-best.onnx"
-    #
-    # Initialize YOLOv8 object detector
-    yolov8_detector = YOLOv8(model_path, conf_thres=0.3, iou_thres=0.5)
+    image_dir_path = "../media/"
 
-    img = np.array(Image.open("auto_models/test_image/resume-wang.pdf-0.jpg"))
+    res = run_detect(model_path,image_dir_path, 0.3, 0.5)
+    print(res)
+    # img = np.array(Image.open("auto_models/test_image/"))()
 
-    # Detect Objects
-    res = []
-    boxes, scores, class_ids = yolov8_detector(img)
-    for i in range(len(class_ids)):
-        res.append([class_ids[i], scores[i], boxes[i]])
-    print("res: {}".format(res))
+    # # Detect Objects
+    # res = []
+    # boxes, scores, class_ids = yolov8_detector(img)
+    # for i in range(len(class_ids)):
+    #     res.append([class_ids[i], scores[i], boxes[i]])
+    # print("res: {}".format(res))
     # print("boxes: {}".format(boxes))
     # print("scores: {}".format(scores))
     # print("class_ids: {}".format(class_ids))
