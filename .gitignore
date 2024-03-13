@@ -206,3 +206,5 @@ financial_labeling_backend/media
 financial_labeling_backend/*.sqlite3*
 financial_labeling_frontend/assets/fonts
 financial_labeling_backend/auto_labeling/auto_models
+financial_labeling_backend/labels/auto_models
+*.zip

@@ -13,9 +13,9 @@ export class APIAuthRepository {
     await this.request.post(url)
   }
 
-  async socialLink(): Promise<any[]> {
-    const url = '/social/links/'
-    const response = await this.request.get(url)
-    return response.data
-  }
+  // async socialLink(): Promise<any[]> {
+  //   const url = '/social/links/'
+  //   const response = await this.request.get(url)
+  //   return response.data
+  // }
 }
