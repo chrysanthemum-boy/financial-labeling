@@ -37,7 +37,9 @@ urlpatterns = [
         view=TextLabelDetailAPI.as_view(),
         name="text_detail",
     ),
+    
     path(route="examples/<int:example_id>/bboxes", view=BoundingBoxListAPI.as_view(), name="bbox_list"),
+    path(route="examples/<int:example_id>/bboxes", view=get_detect_info, name="detectimage"),
     path(
         route="examples/<int:example_id>/bboxes/<int:annotation_id>",
         view=BoundingBoxDetailAPI.as_view(),
@@ -49,5 +51,5 @@ urlpatterns = [
         view=SegmentationDetailAPI.as_view(),
         name="segmentation_detail",
     ),
-    path(route="examples/<int:example_id>/detect/<int:annotation_id>", view=get_detect_info, name="detectimage")
+    # path(route="examples/<int:example_id>/bboxes", view=get_detect_info, name="detectimage")
 ]

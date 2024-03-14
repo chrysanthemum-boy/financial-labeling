@@ -540,7 +540,7 @@ if __name__ == '__main__':
     model_path = "../auto_labeling/auto_models/models/yanbao_paper30_CDLA-best.onnx"
     image_dir_path = "../media/"
 
-    res = run_detect(model_path, image_dir_path, 0.3, 0.5)
+    res = run_detect(model_path, image_dir_path, 0.2, 0.3)
     print(res)
     # img = np.array(Image.open("auto_models/test_image/"))()
 

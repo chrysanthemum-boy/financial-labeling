@@ -131,6 +131,41 @@ class RelationDetail(BaseDetailAPI):
 class BoundingBoxListAPI(BaseListAPI):
     label_class = BoundingBox
     serializer_class = BoundingBoxSerializer
+    
+    def get_detect_data(self, request, *args, **kwargs):
+        example_id = kwargs["example_id"]
+
+        model_path = os.getcwd() + "/labels/auto_models/models/yanbao_paper30_CDLA-best.onnx"
+        image_dir_path = os.getcwd() + "/media/"
+        
+        example = get_object_or_404(Example, id = example_id)
+        file_name = str(example.filename)
+
+        if BoundingBox.objects.filter(example_id = example_id):
+            bboxes = get_list_or_404(BoundingBox, example_id = example_id)
+            res = run_detect(model_path, image_dir_path + file_name, 0.3, 0.5)
+            for i in range(len(res)):
+                bboxes[i].x = res[i][2][0]
+                bboxes[i].y = res[i][2][1]
+                bboxes[i].width = res[i][2][2] - res[i][2][0]
+                bboxes[i].height = res[i][2][3]- res[i][2][1]
+                bboxes[i].example_id = example_id
+                bboxes[i].label_id = 5
+                bboxes[i].user_id = 1
+                bboxes[i].save()
+        else:
+            bboxes = get_list_or_404(BoundingBox)
+            res = run_detect(model_path, image_dir_path + file_name, 0.3, 0.5)
+            for i in range(len(res)):
+                BoundingBox.objects.create(
+                    x = res[i][2][0],
+                    y = res[i][2][1],
+                    width = res[i][2][2] - res[i][2][0],
+                    height = res[i][2][3]- res[i][2][1],
+                    example_id = example_id,
+                    label_id = 5,
+                    user_id = 1,
+                )
 
 
 class BoundingBoxDetailAPI(BaseDetailAPI):
@@ -150,26 +185,22 @@ class SegmentationDetailAPI(BaseDetailAPI):
 
     # queryset = DetectImage
 def get_detect_info(request, *args, **kwargs):
-    project_id = kwargs["project_id"]
     example_id = kwargs["example_id"]
-    annotation_id = kwargs["annotation_id"]
-
     model_path = os.getcwd() + "/labels/auto_models/models/yanbao_paper30_CDLA-best.onnx"
     image_dir_path = os.getcwd() + "/media/"
-   
-    
-    example = get_object_or_404(Example, id = annotation_id)
+
+    example = get_object_or_404(Example, id = example_id)
     file_name = str(example.filename)
     
-    if BoundingBox.objects.filter(example_id = annotation_id):
-        bboxes = get_list_or_404(BoundingBox, example_id = annotation_id)
+    if BoundingBox.objects.filter(example_id = example_id):
+        bboxes = get_list_or_404(BoundingBox, example_id = example_id)
         res = run_detect(model_path, image_dir_path + file_name, 0.3, 0.5)
         for i in range(len(res)):
             bboxes[i].x = res[i][2][0]
             bboxes[i].y = res[i][2][1]
             bboxes[i].width = res[i][2][2] - res[i][2][0]
             bboxes[i].height = res[i][2][3]- res[i][2][1]
-            bboxes[i].example_id = annotation_id
+            bboxes[i].example_id = example_id
             bboxes[i].label_id = 5
             bboxes[i].user_id = 1
             bboxes[i].save()
@@ -182,9 +213,8 @@ def get_detect_info(request, *args, **kwargs):
                 y = res[i][2][1],
                 width = res[i][2][2] - res[i][2][0],
                 height = res[i][2][3]- res[i][2][1],
-                example_id = annotation_id,
+                example_id = example_id,
                 label_id = 5,
                 user_id = 1,
             )
-
     return HttpResponse(res)
