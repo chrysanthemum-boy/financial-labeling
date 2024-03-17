@@ -39,7 +39,7 @@ urlpatterns = [
     ),
     
     path(route="examples/<int:example_id>/bboxes", view=BoundingBoxListAPI.as_view(), name="bbox_list"),
-    path(route="examples/<int:example_id>/bboxes", view=get_detect_info, name="detectimage"),
+    # path(route="examples/<int:example_id>/bboxes", view=get_detect_info, name="detectimage"),
     path(
         route="examples/<int:example_id>/bboxes/<int:annotation_id>",
         view=BoundingBoxDetailAPI.as_view(),

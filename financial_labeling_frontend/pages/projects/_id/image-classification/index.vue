@@ -9,6 +9,7 @@
         :total="images.count"
         class="d-none d-sm-block"
         @click:clear-label="clear"
+        @click:auto-detecting="clear"
         @click:review="confirm"
       >
         <v-btn-toggle v-model="labelOption" mandatory class="ms-2">

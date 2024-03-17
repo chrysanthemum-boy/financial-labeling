@@ -9,6 +9,7 @@
         :total="images.count"
         class="d-none d-sm-block"
         @click:clear-label="clear"
+        @click:auto-detecting="clear"
         @click:review="confirm"
       >
         <button-zoom class="ms-2" @zoom-in="zoomIn" @zoom-out="zoomOut" />

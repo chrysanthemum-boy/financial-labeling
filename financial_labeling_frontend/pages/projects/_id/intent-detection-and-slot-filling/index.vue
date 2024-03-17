@@ -9,6 +9,7 @@
         :total="docs.count"
         class="d-none d-sm-block"
         @click:clear-label="clear"
+        @click:auto-detecting="clear"
         @click:review="confirm"
       />
       <toolbar-mobile :total="docs.count" class="d-flex d-sm-none" />

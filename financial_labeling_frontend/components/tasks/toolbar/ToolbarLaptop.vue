@@ -19,6 +19,7 @@
         </v-dialog>
 
         <button-auto-labeling @click:auto="dialogAutoLabeling = true" />
+        
         <v-dialog v-model="dialogAutoLabeling">
           <form-auto-labeling
             :is-enabled="enableAutoLabeling"
@@ -38,6 +39,18 @@
             @click:cancel="dialogClear = false"
           />
         </v-dialog>
+
+        <!--  
+        <button-auto-detecting @click:clear="dialogAutoDetecting = true" />
+        <v-dialog v-model="dialogAutoDetecting">
+          <form-auto-detecting
+            @click:ok="
+              $emit('click:auto-detecting')
+              dialogAutoDetecting = false
+            "
+            @click:cancel="dialogAutoDetecting = false"
+          />
+        </v-dialog> -->
 
         <button-keyboard-shortcut @click:open="dialogShortcut = true" />
         <v-dialog v-model="dialogShortcut">
@@ -61,6 +74,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+// import ButtonAutoDetecting from './buttons/ButtonAutoDetecting.vue'
 import ButtonAutoLabeling from './buttons/ButtonAutoLabeling.vue'
 import ButtonClear from './buttons/ButtonClear.vue'
 import ButtonComment from './buttons/ButtonComment.vue'
@@ -71,6 +85,7 @@ import ButtonPagination from './buttons/ButtonPagination.vue'
 import ButtonReview from './buttons/ButtonReview.vue'
 import ButtonKeyboardShortcut from './buttons/ButtonKeyboardShortcut.vue'
 import FormAutoLabeling from './forms/FormAutoLabeling.vue'
+// import FormAutoDetecting from './forms/FormAutoDetecting.vue'
 import FormClearLabel from './forms/FormClearLabel.vue'
 import FormComment from './forms/FormComment.vue'
 import FormGuideline from './forms/FormGuideline.vue'
@@ -78,6 +93,7 @@ import FormKeyboardShortcut from './forms/FormKeyboardShortcut.vue'
 
 export default Vue.extend({
   components: {
+    // ButtonAutoDetecting,
     ButtonAutoLabeling,
     ButtonClear,
     ButtonComment,
@@ -88,6 +104,7 @@ export default Vue.extend({
     ButtonPagination,
     ButtonReview,
     FormAutoLabeling,
+    // FormAutoDetecting,
     FormClearLabel,
     FormComment,
     FormGuideline,
@@ -122,6 +139,7 @@ export default Vue.extend({
   data() {
     return {
       dialogAutoLabeling: false,
+      dialogAutoDetecting: false,
       dialogClear: false,
       dialogComment: false,
       dialogGuideline: false,

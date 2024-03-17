@@ -132,41 +132,52 @@ class BoundingBoxListAPI(BaseListAPI):
     label_class = BoundingBox
     serializer_class = BoundingBoxSerializer
     
-    def get_detect_data(self, request, *args, **kwargs):
-        example_id = kwargs["example_id"]
-
+    def get_queryset(self):
+        example_id = self.kwargs["example_id"]
         model_path = os.getcwd() + "/labels/auto_models/models/yanbao_paper30_CDLA-best.onnx"
         image_dir_path = os.getcwd() + "/media/"
-        
         example = get_object_or_404(Example, id = example_id)
         file_name = str(example.filename)
-
         if BoundingBox.objects.filter(example_id = example_id):
             bboxes = get_list_or_404(BoundingBox, example_id = example_id)
-            res = run_detect(model_path, image_dir_path + file_name, 0.3, 0.5)
+            res = run_detect(model_path, image_dir_path + file_name, 0.5, 0.5)
             for i in range(len(res)):
-                bboxes[i].x = res[i][2][0]
-                bboxes[i].y = res[i][2][1]
-                bboxes[i].width = res[i][2][2] - res[i][2][0]
-                bboxes[i].height = res[i][2][3]- res[i][2][1]
-                bboxes[i].example_id = example_id
-                bboxes[i].label_id = 5
-                bboxes[i].user_id = 1
-                bboxes[i].save()
+                if i < len(bboxes):
+                    if res[i][2][0] and res[i][2][1] >= 0:
+                        bboxes[i].x = res[i][2][0]
+                        bboxes[i].y = res[i][2][1]
+                        bboxes[i].width = abs(res[i][2][2] - res[i][2][0])
+                        bboxes[i].height = abs(res[i][2][3]- res[i][2][1])
+                        bboxes[i].example_id = example_id
+                        bboxes[i].label_id = 5
+                        bboxes[i].user_id = 1
+                        bboxes[i].save()
+                else:
+                    if res[i][2][0] and res[i][2][1] >= 0:
+                        BoundingBox.objects.create(
+                            x = res[i][2][0],
+                            y = res[i][2][1],
+                            width = res[i][2][2] - res[i][2][0],
+                            height = res[i][2][3]- res[i][2][1],
+                            example_id = example_id,
+                            label_id = 5,
+                            user_id = 1,
+                        )
         else:
-            bboxes = get_list_or_404(BoundingBox)
-            res = run_detect(model_path, image_dir_path + file_name, 0.3, 0.5)
+            res = run_detect(model_path, image_dir_path + file_name, 0.5, 0.5)
             for i in range(len(res)):
-                BoundingBox.objects.create(
-                    x = res[i][2][0],
-                    y = res[i][2][1],
-                    width = res[i][2][2] - res[i][2][0],
-                    height = res[i][2][3]- res[i][2][1],
-                    example_id = example_id,
-                    label_id = 5,
-                    user_id = 1,
-                )
-
+                if res[i][2][0] and res[i][2][1] >= 0:
+                    BoundingBox.objects.create(
+                        x = res[i][2][0],
+                        y = res[i][2][1],
+                        width = res[i][2][2] - res[i][2][0],
+                        height = res[i][2][3]- res[i][2][1],
+                        example_id = example_id,
+                        label_id = 5,
+                        user_id = 1,
+                    )
+        queryset = super().get_queryset()
+        return queryset
 
 class BoundingBoxDetailAPI(BaseDetailAPI):
     queryset = BoundingBox.objects.all()

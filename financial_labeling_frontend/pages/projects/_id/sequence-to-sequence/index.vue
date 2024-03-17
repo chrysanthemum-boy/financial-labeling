@@ -9,6 +9,7 @@
         :total="totalExample"
         class="d-none d-sm-block"
         @click:clear-label="clear(example.id)"
+        @click:auto-detecting="clear(example.id)"
         @click:review="confirm(projectId)"
       />
       <toolbar-mobile :total="totalExample" class="d-flex d-sm-none" />

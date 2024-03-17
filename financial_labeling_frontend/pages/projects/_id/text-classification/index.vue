@@ -9,6 +9,7 @@
         :total="totalExample"
         class="d-none d-sm-block"
         @click:clear-label="clearTeacherList(project.id, example.id)"
+        @click:clear-detecting="clearTeacherList(project.id, example.id)"
         @click:review="confirm(project.id)"
       >
         <button-label-switch class="ms-2" @change="labelComponent = $event" />

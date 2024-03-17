@@ -17,6 +17,12 @@
         :error-messages="errorMessage"
         @change="$emit('input', $event)"
       />
+      <v-btn
+        color="primary"
+        @click = "detect"
+      >
+        开始自动标注
+      </v-btn>
     </template>
   </base-card>
 </template>
@@ -40,6 +46,12 @@ export default Vue.extend({
       type: String,
       default: '',
       required: true
+    }
+  },
+
+  methods: {
+    detect() {
+
     }
   }
 })
