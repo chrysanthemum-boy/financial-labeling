@@ -23,7 +23,6 @@ from .serializers import (
 from labels.models import (
     BoundingBox,
     Category,
-    # DetectImage,
     Label,
     Relation,
     Segmentation,
@@ -33,6 +32,7 @@ from labels.models import (
 from projects.models import Project
 from projects.permissions import IsProjectMember
 from utils.models import Example
+from label_types.models import CategoryType
 
 class BaseListAPI(generics.ListCreateAPIView):
     label_class: Type[Label]
@@ -131,53 +131,7 @@ class RelationDetail(BaseDetailAPI):
 class BoundingBoxListAPI(BaseListAPI):
     label_class = BoundingBox
     serializer_class = BoundingBoxSerializer
-    
-    def get_queryset(self):
-        example_id = self.kwargs["example_id"]
-        model_path = os.getcwd() + "/labels/auto_models/models/yanbao_paper30_CDLA-best.onnx"
-        image_dir_path = os.getcwd() + "/media/"
-        example = get_object_or_404(Example, id = example_id)
-        file_name = str(example.filename)
-        if BoundingBox.objects.filter(example_id = example_id):
-            bboxes = get_list_or_404(BoundingBox, example_id = example_id)
-            res = run_detect(model_path, image_dir_path + file_name, 0.5, 0.5)
-            for i in range(len(res)):
-                if i < len(bboxes):
-                    if res[i][2][0] and res[i][2][1] >= 0:
-                        bboxes[i].x = res[i][2][0]
-                        bboxes[i].y = res[i][2][1]
-                        bboxes[i].width = abs(res[i][2][2] - res[i][2][0])
-                        bboxes[i].height = abs(res[i][2][3]- res[i][2][1])
-                        bboxes[i].example_id = example_id
-                        bboxes[i].label_id = 5
-                        bboxes[i].user_id = 1
-                        bboxes[i].save()
-                else:
-                    if res[i][2][0] and res[i][2][1] >= 0:
-                        BoundingBox.objects.create(
-                            x = res[i][2][0],
-                            y = res[i][2][1],
-                            width = res[i][2][2] - res[i][2][0],
-                            height = res[i][2][3]- res[i][2][1],
-                            example_id = example_id,
-                            label_id = 5,
-                            user_id = 1,
-                        )
-        else:
-            res = run_detect(model_path, image_dir_path + file_name, 0.5, 0.5)
-            for i in range(len(res)):
-                if res[i][2][0] and res[i][2][1] >= 0:
-                    BoundingBox.objects.create(
-                        x = res[i][2][0],
-                        y = res[i][2][1],
-                        width = res[i][2][2] - res[i][2][0],
-                        height = res[i][2][3]- res[i][2][1],
-                        example_id = example_id,
-                        label_id = 5,
-                        user_id = 1,
-                    )
-        queryset = super().get_queryset()
-        return queryset
+
 
 class BoundingBoxDetailAPI(BaseDetailAPI):
     queryset = BoundingBox.objects.all()
@@ -194,38 +148,63 @@ class SegmentationDetailAPI(BaseDetailAPI):
     serializer_class = SegmentationSerializer
 
 
-    # queryset = DetectImage
-def get_detect_info(request, *args, **kwargs):
-    example_id = kwargs["example_id"]
-    model_path = os.getcwd() + "/labels/auto_models/models/yanbao_paper30_CDLA-best.onnx"
-    image_dir_path = os.getcwd() + "/media/"
-
-    example = get_object_or_404(Example, id = example_id)
-    file_name = str(example.filename)
+class DetectBoxListAPI(BaseListAPI):
+    label_class = BoundingBox
+    serializer_class = BoundingBoxSerializer
     
-    if BoundingBox.objects.filter(example_id = example_id):
-        bboxes = get_list_or_404(BoundingBox, example_id = example_id)
-        res = run_detect(model_path, image_dir_path + file_name, 0.3, 0.5)
-        for i in range(len(res)):
-            bboxes[i].x = res[i][2][0]
-            bboxes[i].y = res[i][2][1]
-            bboxes[i].width = res[i][2][2] - res[i][2][0]
-            bboxes[i].height = res[i][2][3]- res[i][2][1]
-            bboxes[i].example_id = example_id
-            bboxes[i].label_id = 5
-            bboxes[i].user_id = 1
-            bboxes[i].save()
-    else:
-        bboxes = get_list_or_404(BoundingBox)
-        res = run_detect(model_path, image_dir_path + file_name, 0.3, 0.5)
-        for i in range(len(res)):
-            BoundingBox.objects.create(
-                x = res[i][2][0],
-                y = res[i][2][1],
-                width = res[i][2][2] - res[i][2][0],
-                height = res[i][2][3]- res[i][2][1],
-                example_id = example_id,
-                label_id = 5,
-                user_id = 1,
-            )
-    return HttpResponse(res)
+    def get_queryset(self):
+        example_id = self.kwargs["example_id"]
+        project_id = self.kwargs["project_id"]
+        model_path = os.getcwd() + "/labels/auto_models/models/yanbao_paper30_CDLA-best.onnx"
+        image_dir_path = os.getcwd() + "/media/"
+        example = get_object_or_404(Example, id = example_id)
+        catagory_types = get_list_or_404(CategoryType, project_id = project_id)
+        
+        id_text_dic_list = []
+        for catagory_type in catagory_types:
+            id = catagory_type.id
+            text = catagory_type.text
+            id_text_dic = {"id": id, "text": text}
+            id_text_dic_list.append(id_text_dic)
+            
+        file_name = str(example.filename)
+        if BoundingBox.objects.filter(example_id = example_id):
+            bboxes = get_list_or_404(BoundingBox, example_id = example_id)
+            res = run_detect(model_path, image_dir_path + file_name, 0.5, 0.3)
+            for i in range(len(res)):
+                if i < len(bboxes):
+                    if res[i][2][0] >= 0 and res[i][2][1] >= 0:
+                        bboxes[i].x = res[i][2][0]
+                        bboxes[i].y = res[i][2][1]
+                        bboxes[i].width = abs(res[i][2][2] - res[i][2][0])
+                        bboxes[i].height = abs(res[i][2][3]- res[i][2][1])
+                        bboxes[i].example_id = example_id
+                        bboxes[i].label_id = id_text_dic_list[res[i][0]]["id"]
+                        bboxes[i].user_id = 1
+                        bboxes[i].save()
+                else:
+                    if res[i][2][0] >= 0 and res[i][2][1] >= 0:
+                        BoundingBox.objects.create(
+                            x = res[i][2][0],
+                            y = res[i][2][1],
+                            width = res[i][2][2] - res[i][2][0],
+                            height = res[i][2][3]- res[i][2][1],
+                            example_id = example_id,
+                            label_id = id_text_dic_list[res[i][0]]["id"],
+                            user_id = 1,
+                        )
+        else:
+            res = run_detect(model_path, image_dir_path + file_name, 0.5, 0.3)
+            for i in range(len(res)):
+                if res[i][2][0] >= 0 and res[i][2][1] >= 0:
+                    BoundingBox.objects.create(
+                        x = res[i][2][0],
+                        y = res[i][2][1],
+                        width = res[i][2][2] - res[i][2][0],
+                        height = res[i][2][3]- res[i][2][1],
+                        example_id = example_id,
+                        label_id = id_text_dic_list[res[i][0]]["id"],
+                        user_id = 1,
+                    )
+        queryset = super().get_queryset()
+        return queryset

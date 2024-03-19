@@ -28,9 +28,9 @@ class SegmentationAdmin(admin.ModelAdmin):
     ordering = ("example",)
 
 
-# class DetectImageAdmin(admin.ModelAdmin):
-#     list_display = ("example", "label", "user", "x-d", "y-d", "width-d", "height-d")
-#     ordering = ("example",)
+class DetectImageAdmin(admin.ModelAdmin):
+    list_display = ("example", "label", "user", "x", "y", "width", "height")
+    ordering = ("example",)
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Span, SpanAdmin)

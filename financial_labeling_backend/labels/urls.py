@@ -13,7 +13,8 @@ from .views import (
     SpanListAPI,
     TextLabelDetailAPI,
     TextLabelListAPI,
-    get_detect_info,
+    # get_detect_info,
+    DetectBoxListAPI,
 )
 
 urlpatterns = [
@@ -39,7 +40,11 @@ urlpatterns = [
     ),
     
     path(route="examples/<int:example_id>/bboxes", view=BoundingBoxListAPI.as_view(), name="bbox_list"),
-    # path(route="examples/<int:example_id>/bboxes", view=get_detect_info, name="detectimage"),
+    path(
+        route="examples/<int:example_id>/bboxes/detect", 
+        view=DetectBoxListAPI.as_view(), 
+        name="detect_image",
+    ),
     path(
         route="examples/<int:example_id>/bboxes/<int:annotation_id>",
         view=BoundingBoxDetailAPI.as_view(),
@@ -50,6 +55,5 @@ urlpatterns = [
         route="examples/<int:example_id>/segments/<int:annotation_id>",
         view=SegmentationDetailAPI.as_view(),
         name="segmentation_detail",
-    ),
-    # path(route="examples/<int:example_id>/bboxes", view=get_detect_info, name="detectimage")
+    ), 
 ]

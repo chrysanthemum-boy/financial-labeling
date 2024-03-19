@@ -92,6 +92,7 @@ class SegmentationManager(LabelManager):
     def can_annotate(self, label, project) -> bool:
         return True
 
+
 class DetectImageManager(LabelManager):
     def can_annotate(self, label, project) -> bool:
         return True
