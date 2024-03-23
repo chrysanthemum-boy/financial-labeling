@@ -10,6 +10,13 @@
         :label-types="categoryTypes"
       />
     </v-col>
+    <v-col v-if="!!project.canDefineBoundingbox" cols="12">
+      <label-distribution
+        title="Boundingbox Distribution"
+        :distribution="categoryDistribution"
+        :label-types="categoryTypes"
+      />
+    </v-col>
     <v-col v-if="!!project.canDefineSpan" cols="12">
       <label-distribution
         title="Span Distribution"
@@ -79,6 +86,12 @@ export default {
     if (this.project.canDefineRelation) {
       this.relationTypes = await this.$services.relationType.list(this.projectId)
       this.relationDistribution = await this.$repositories.metrics.fetchRelationDistribution(
+        this.projectId
+      )
+    }
+    if (this.project.canDefineBoundingbox) {
+      this.categoryTypes = await this.$services.categoryType.list(this.projectId)
+      this.categoryDistribution = await this.$repositories.metrics.fetchBoundingboxDistribution(
         this.projectId
       )
     }

@@ -170,7 +170,7 @@ class DetectBoxListAPI(BaseListAPI):
         file_name = str(example.filename)
         if BoundingBox.objects.filter(example_id = example_id):
             bboxes = get_list_or_404(BoundingBox, example_id = example_id)
-            res = run_detect(model_path, image_dir_path + file_name, 0.5, 0.3)
+            res = run_detect(model_path, image_dir_path + file_name, 0.3, 0.3)
             for i in range(len(res)):
                 if i < len(bboxes):
                     if res[i][2][0] >= 0 and res[i][2][1] >= 0:
@@ -194,7 +194,7 @@ class DetectBoxListAPI(BaseListAPI):
                             user_id = 1,
                         )
         else:
-            res = run_detect(model_path, image_dir_path + file_name, 0.5, 0.3)
+            res = run_detect(model_path, image_dir_path + file_name, 0.3, 0.3)
             for i in range(len(res)):
                 if res[i][2][0] >= 0 and res[i][2][1] >= 0:
                     BoundingBox.objects.create(

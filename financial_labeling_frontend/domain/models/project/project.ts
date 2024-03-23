@@ -43,12 +43,18 @@ export const canDefineCategory = (projectType: ProjectType): boolean => {
   ].includes(projectType)
 }
 
+export const canDefineBoundingbox = (projectType: ProjectType): boolean => {
+  return [BoundingBox].includes(projectType)
+}
+
 export const canDefineSpan = (projectType: ProjectType): boolean => {
   return [SequenceLabeling, IntentDetectionAndSlotFilling].includes(projectType)
 }
 
 export const canDefineLabel = (projectType: ProjectType): boolean => {
-  return canDefineCategory(projectType) || canDefineSpan(projectType)
+  return canDefineCategory(projectType) 
+  || canDefineSpan(projectType) 
+  || canDefineBoundingbox(projectType)
 }
 
 export class Project {
@@ -130,6 +136,10 @@ export class Project {
 
   get canDefineCategory(): boolean {
     return canDefineCategory(this.projectType)
+  }
+
+  get canDefineBoundingbox(): boolean {
+    return canDefineBoundingbox(this.projectType)
   }
 
   get canDefineSpan(): boolean {

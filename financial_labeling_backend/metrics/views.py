@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from utils.models import Example, ExampleState
 from label_types.models import CategoryType, LabelType, RelationType, SpanType
-from labels.models import Category, Label, Relation, Span
+from labels.models import Category, Label, Relation, Span, BoundingBox
 from projects.models import Member, Project
 from projects.permissions import IsProjectAdmin, IsProjectStaffAndReadOnly
 
@@ -64,3 +64,7 @@ class SpanTypeDistribution(LabelDistribution):
 class RelationTypeDistribution(LabelDistribution):
     model = Relation
     label_type = RelationType
+
+class BoundingBoxTypeDistribution(LabelDistribution):
+    model = BoundingBox
+    label_type = CategoryType

@@ -1,6 +1,6 @@
 <template>
     <confirm-form
-      title="Clear annotations"
+      title="Clear  annotations"
       message="Are you sure you want to delete all annotations?"
       :button-true-text="$t('generic.yes')"
       :button-false-text="$t('generic.cancel')"

@@ -40,22 +40,26 @@
           />
         </v-dialog>
 
-        <!--  
-        <button-auto-detecting @click:clear="dialogAutoDetecting = true" />
+      
+        <button-auto-detecting @click:detecting="dialogAutoDetecting = true" />
         <v-dialog v-model="dialogAutoDetecting">
           <form-auto-detecting
             @click:ok="
-              $emit('click:auto-detecting')
+              $emit('click:detecting')
               dialogAutoDetecting = false
             "
             @click:cancel="dialogAutoDetecting = false"
           />
-        </v-dialog> -->
+        </v-dialog>
 
         <button-keyboard-shortcut @click:open="dialogShortcut = true" />
         <v-dialog v-model="dialogShortcut">
           <form-keyboard-shortcut @click:close="dialogShortcut = false" />
         </v-dialog>
+
+
+
+
       </v-btn-toggle>
       <slot />
       <v-spacer />
@@ -74,7 +78,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-// import ButtonAutoDetecting from './buttons/ButtonAutoDetecting.vue'
+import ButtonAutoDetecting from './buttons/ButtonAutoDetecting.vue'
 import ButtonAutoLabeling from './buttons/ButtonAutoLabeling.vue'
 import ButtonClear from './buttons/ButtonClear.vue'
 import ButtonComment from './buttons/ButtonComment.vue'
@@ -85,7 +89,7 @@ import ButtonPagination from './buttons/ButtonPagination.vue'
 import ButtonReview from './buttons/ButtonReview.vue'
 import ButtonKeyboardShortcut from './buttons/ButtonKeyboardShortcut.vue'
 import FormAutoLabeling from './forms/FormAutoLabeling.vue'
-// import FormAutoDetecting from './forms/FormAutoDetecting.vue'
+import FormAutoDetecting from './forms/FormAutoDetecting.vue'
 import FormClearLabel from './forms/FormClearLabel.vue'
 import FormComment from './forms/FormComment.vue'
 import FormGuideline from './forms/FormGuideline.vue'
@@ -93,7 +97,7 @@ import FormKeyboardShortcut from './forms/FormKeyboardShortcut.vue'
 
 export default Vue.extend({
   components: {
-    // ButtonAutoDetecting,
+    ButtonAutoDetecting,
     ButtonAutoLabeling,
     ButtonClear,
     ButtonComment,
@@ -104,7 +108,7 @@ export default Vue.extend({
     ButtonPagination,
     ButtonReview,
     FormAutoLabeling,
-    // FormAutoDetecting,
+    FormAutoDetecting,
     FormClearLabel,
     FormComment,
     FormGuideline,

@@ -24,6 +24,11 @@ import { APICatalogRepository } from '@/repositories/upload/apiCatalogRepository
 import { APIParseRepository } from '@/repositories/upload/apiParseRepository'
 import { APIUserRepository } from '@/repositories/user/apiUserRepository'
 import { APISegmentationRepository } from '~/repositories/tasks/apiSegmentationRepository'
+
+
+// 4. 写入API
+import { APIDetectRepository } from '~/repositories/detect/apiDetectRepository'
+
 export interface Repositories {
   // User
   auth: APIAuthRepository
@@ -67,6 +72,7 @@ export interface Repositories {
   textLabel: APITextLabelRepository
   boundingBox: APIBoundingBoxRepository
   segmentation: APISegmentationRepository
+  detect: APIDetectRepository
 }
 
 declare module 'vue/types/vue' {
@@ -117,7 +123,8 @@ const repositories: Repositories = {
   relation: new APIRelationRepository(),
   textLabel: new APITextLabelRepository(),
   boundingBox: new APIBoundingBoxRepository(),
-  segmentation: new APISegmentationRepository()
+  segmentation: new APISegmentationRepository(),
+  detect: new APIDetectRepository()
 }
 
 const plugin: Plugin = (_, inject) => {

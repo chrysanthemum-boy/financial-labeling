@@ -9,6 +9,8 @@ import { BoundingBoxApplicationService } from '@/services/application/tasks/boun
 import { SegmentationApplicationService } from '@/services/application/tasks/segmentation/segmentationApplicationService'
 import { SequenceLabelingApplicationService } from '@/services/application/tasks/sequenceLabeling/sequenceLabelingApplicationService'
 
+// 3. 注入你的服务
+import { DetectApplicationService } from '~/services/application/detect/detectApplicationService'
 export interface Services {
   categoryType: LabelApplicationService
   spanType: LabelApplicationService
@@ -20,6 +22,7 @@ export interface Services {
   tag: TagApplicationService
   bbox: BoundingBoxApplicationService
   segmentation: SegmentationApplicationService
+  detect: DetectApplicationService
 }
 
 declare module 'vue/types/vue' {
@@ -42,7 +45,8 @@ const plugin: Plugin = (_, inject) => {
     option: new OptionApplicationService(repositories.option),
     tag: new TagApplicationService(repositories.tag),
     bbox: new BoundingBoxApplicationService(repositories.boundingBox),
-    segmentation: new SegmentationApplicationService(repositories.segmentation)
+    segmentation: new SegmentationApplicationService(repositories.segmentation),
+    detect: new DetectApplicationService(repositories.detect)
   }
   inject('services', services)
 }
