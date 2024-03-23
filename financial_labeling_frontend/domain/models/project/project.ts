@@ -38,7 +38,7 @@ export const canDefineCategory = (projectType: ProjectType): boolean => {
     DocumentClassification,
     IntentDetectionAndSlotFilling,
     ImageClassification,
-    BoundingBox,
+    // BoundingBox,
     Segmentation
   ].includes(projectType)
 }
