@@ -13,8 +13,8 @@ from .views import (
     SpanListAPI,
     TextLabelDetailAPI,
     TextLabelListAPI,
-    # get_detect_info,
     DetectBoxListAPI,
+    SegmentBoxListAPI,
 )
 
 urlpatterns = [
@@ -56,4 +56,5 @@ urlpatterns = [
         view=SegmentationDetailAPI.as_view(),
         name="segmentation_detail",
     ), 
+    path(route="examples/<int:example_id>/segments/detect", view=SegmentBoxListAPI.as_view(), name="segmentation_list"),
 ]

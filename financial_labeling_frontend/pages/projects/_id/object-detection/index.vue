@@ -283,6 +283,17 @@ export default {
       console.log('detecting')
     },
 
+    async segmenting() {
+      // 发起请求，this.$service 这个
+      try {
+        await this.$services.detect.segment(this.projectId, this.image.id)
+        await this.list(this.image.id)
+      } catch (e) {
+        console.log(e)
+      }
+      console.log('segmenting')
+    },
+
     async autoLabel(imageId) {
       try {
         await this.$services.bbox.autoLabel(this.projectId, imageId)

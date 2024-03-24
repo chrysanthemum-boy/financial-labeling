@@ -7,6 +7,7 @@ from .views import (
     RelationTypeDistribution,
     SpanTypeDistribution,
     BoundingBoxTypeDistribution,
+    SegmentationTypeDistribution,
 )
 
 urlpatterns = [
@@ -16,4 +17,5 @@ urlpatterns = [
     path(route="relation-distribution", view=RelationTypeDistribution.as_view(), name="relation_distribution"),
     path(route="span-distribution", view=SpanTypeDistribution.as_view(), name="span_distribution"),
     path(route="boundingbox-distribution", view=BoundingBoxTypeDistribution.as_view(), name="boundingbox_distribution"),
+    path(route="segments-distribution", view=SegmentationTypeDistribution.as_view(), name="segments_distribution"),
 ]

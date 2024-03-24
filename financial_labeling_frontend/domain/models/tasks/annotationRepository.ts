@@ -58,6 +58,10 @@ export abstract class AnnotationRepository<T> {
     return `/projects/${projectId}/examples/${exampleId}/detect/${this.labelName}`
   }
 
+  protected segmenttUrl(projectId: string, exampleId: number): string {
+    return `/projects/${projectId}/examples/${exampleId}/segments/${this.labelName}`
+  }
+
   protected abstract toModel(item: { [key: string]: any }): T
 
   protected abstract toPayload(item: T): { [key: string]: any }

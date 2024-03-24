@@ -1,7 +1,7 @@
 <template>
     <confirm-form
-      title="Clear  annotations"
-      message="Are you sure you want to delete all annotations?"
+      title="Auto detect"
+      message="Are you sure you want to detect image?"
       :button-true-text="$t('generic.yes')"
       :button-false-text="$t('generic.cancel')"
       @ok="$emit('click:ok')"

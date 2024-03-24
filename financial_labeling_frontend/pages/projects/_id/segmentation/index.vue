@@ -9,7 +9,7 @@
         :total="images.count"
         class="d-none d-sm-block"
         @click:clear-label="clear"
-        @click:auto-detecting="clear"
+        @click:detecting="segmenting"
         @click:review="confirm"
       >
         <button-zoom class="ms-2" @zoom-in="zoomIn" @zoom-out="zoomOut" />
@@ -273,6 +273,17 @@ export default {
     async clear() {
       await this.$services.segmentation.clear(this.projectId, this.image.id)
       await this.list(this.image.id)
+    },
+
+    async segmenting() {
+      // 发起请求，this.$service 这个
+      try {
+        await this.$services.detect.segment(this.projectId, this.image.id)
+        await this.list(this.image.id)
+      } catch (e) {
+        console.log(e)
+      }
+      console.log('segmenting')
     },
 
     async autoLabel(imageId) {

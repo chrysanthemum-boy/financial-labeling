@@ -39,12 +39,16 @@ export const canDefineCategory = (projectType: ProjectType): boolean => {
     IntentDetectionAndSlotFilling,
     ImageClassification,
     // BoundingBox,
-    Segmentation
+    // Segmentation
   ].includes(projectType)
 }
 
 export const canDefineBoundingbox = (projectType: ProjectType): boolean => {
   return [BoundingBox].includes(projectType)
+}
+
+export const canDefineSegments = (projectType: ProjectType): boolean => {
+  return [Segmentation].includes(projectType)
 }
 
 export const canDefineSpan = (projectType: ProjectType): boolean => {
@@ -55,6 +59,7 @@ export const canDefineLabel = (projectType: ProjectType): boolean => {
   return canDefineCategory(projectType) 
   || canDefineSpan(projectType) 
   || canDefineBoundingbox(projectType)
+  || canDefineSegments(projectType)
 }
 
 export class Project {
@@ -141,6 +146,11 @@ export class Project {
   get canDefineBoundingbox(): boolean {
     return canDefineBoundingbox(this.projectType)
   }
+
+  get canDefineSegments(): boolean {
+    return canDefineSegments(this.projectType)
+  }
+
 
   get canDefineSpan(): boolean {
     return canDefineSpan(this.projectType)
