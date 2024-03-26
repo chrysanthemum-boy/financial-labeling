@@ -9,7 +9,7 @@
         :total="docs.count"
         class="d-none d-sm-block"
         @click:clear-label="clear"
-        @click:auto-detecting="clear"
+        @click:detecting="spanning"
         @click:review="confirm"
       />
       <toolbar-mobile :total="docs.count" class="d-flex d-sm-none" />
@@ -283,6 +283,17 @@ export default {
     async clear() {
       await this.$services.sequenceLabeling.clear(this.projectId, this.doc.id)
       await this.list(this.doc.id)
+    },
+
+    async spanning() {
+      // 发起请求，this.$service 这个
+      try {
+        await this.$services.detect.span(this.projectId, this.doc.id)
+        await this.list(this.doc.id)
+      } catch (e) {
+        console.log(e)
+      }
+      console.log('spanning')
     },
 
     async autoLabel(docId) {

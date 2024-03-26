@@ -15,4 +15,9 @@ export class APIDetectRepository implements DetectRepository {
     await this.request.get(url)
   }
 
+  async span(projectId:number, exampleId: number): Promise<void> {
+    const url = `/projects/${projectId}/examples/${exampleId}/spans/detect`
+    await this.request.get(url)
+  }
+
 }

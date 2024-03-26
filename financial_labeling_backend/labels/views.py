@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.http import HttpResponse
 
-from .detect_auto import run_detect, run_segment
+from .detect_auto import run_detect, run_segment, run_span
 
 from .permissions import CanEditLabel
 from .serializers import (
@@ -32,7 +32,7 @@ from labels.models import (
 from projects.models import Project
 from projects.permissions import IsProjectMember
 from utils.models import Example
-from label_types.models import CategoryType
+from label_types.models import CategoryType, SpanType
 
 
 class BaseListAPI(generics.ListCreateAPIView):
@@ -149,7 +149,7 @@ class SegmentationDetailAPI(BaseDetailAPI):
     serializer_class = SegmentationSerializer
 
 
-class DetectBoxListAPI(BaseListAPI):
+class AutoDetectBoxListAPI(BaseListAPI):
     label_class = BoundingBox
     serializer_class = BoundingBoxSerializer
 
@@ -175,6 +175,7 @@ class DetectBoxListAPI(BaseListAPI):
             for i in range(len(res)):
                 if i < len(bboxes):
                     if res[i][2][0] >= 0 and res[i][2][1] >= 0:
+                        bboxes[i].prob = res[i][1]
                         bboxes[i].x = res[i][2][0]
                         bboxes[i].y = res[i][2][1]
                         bboxes[i].width = abs(res[i][2][2] - res[i][2][0])
@@ -186,6 +187,7 @@ class DetectBoxListAPI(BaseListAPI):
                 else:
                     if res[i][2][0] >= 0 and res[i][2][1] >= 0:
                         BoundingBox.objects.create(
+                            prob=res[i][1],
                             x=res[i][2][0],
                             y=res[i][2][1],
                             width=res[i][2][2] - res[i][2][0],
@@ -199,6 +201,7 @@ class DetectBoxListAPI(BaseListAPI):
             for i in range(len(res)):
                 if res[i][2][0] >= 0 and res[i][2][1] >= 0:
                     BoundingBox.objects.create(
+                        prob=res[i][1],
                         x=res[i][2][0],
                         y=res[i][2][1],
                         width=res[i][2][2] - res[i][2][0],
@@ -211,7 +214,7 @@ class DetectBoxListAPI(BaseListAPI):
         return queryset
 
 
-class SegmentBoxListAPI(BaseListAPI):
+class AutoSegmentBoxListAPI(BaseListAPI):
     label_class = Segmentation
     serializer_class = SegmentationSerializer
 
@@ -240,6 +243,7 @@ class SegmentBoxListAPI(BaseListAPI):
                     segments[i].example_id = example_id
                     segments[i].label_id = id_text_dic_list[res[0][i][1]]["id"]
                     segments[i].user_id = 1
+                    segments[i].save()
                 else:
                     Segmentation.objects.create(
                         points=res[0][i][0],
@@ -258,3 +262,46 @@ class SegmentBoxListAPI(BaseListAPI):
                 )
         queryset = super().get_queryset()
         return queryset
+
+
+class AutoSpanListAPI(BaseListAPI):
+    label_class = Span
+    serializer_class = SpanSerializer
+
+    def get_queryset(self):
+        example_id = self.kwargs["example_id"]
+
+        text = Example.objects.get(id=example_id).text
+        
+        ner_res = run_span(text)
+
+        if Span.objects.filter(example_id=example_id):
+            span_objects = get_list_or_404(Span, example_id=example_id)
+            for i in range(len(ner_res)):
+                id = SpanType.objects.get(text=ner_res[i][1]).id
+                if i < len(span_objects):
+                    span_objects[i].start_offset = ner_res[i][2]
+                    span_objects[i].end_offset = ner_res[i][3]
+                    span_objects[i].example_id = example_id
+                    span_objects[i].label_id = id
+                    span_objects[i].user_id = 1
+                    span_objects[i].save()
+                else:
+                    Span.objects.create(
+                        start_offset=ner_res[i][2],
+                        end_offset=ner_res[i][3],
+                        example_id=example_id,
+                        label_id=id,
+                        user_id=1,
+                    )
+        else:
+            for i in range(len(ner_res)):
+                id = SpanType.objects.get(text=ner_res[i][1]).id
+                Span.objects.create(
+                    start_offset=ner_res[i][2],
+                    end_offset=ner_res[i][3],
+                    example_id=example_id,
+                    label_id=id,
+                    user_id=1,
+                )
+        return super().get_queryset()

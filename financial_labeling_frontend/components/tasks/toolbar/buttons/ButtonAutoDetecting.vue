@@ -24,7 +24,6 @@ export default {
     handleClick() {
       // 触发两个不同的事件
       this.$emit('click:detecting');
-      // this.$emit('click:segment');
     }
   }
 }

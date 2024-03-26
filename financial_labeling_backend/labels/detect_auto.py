@@ -16,22 +16,14 @@ from xml.etree import ElementTree as ET
 from torch import sigmoid
 from ultralytics import YOLO
 
+import hanlp
 
-# class_names = ['none',
-#                'text',
-#                'title',
-#                'figure',
-#                'figure_caption',
-#                'table',
-#                'table_caption',
-#                'header',
-#                'footer',
-#                'reference',
-#                'equation']
-
-# # Create a list of colors for each class where each color is a tuple of 3 integer values
-# rng = np.random.default_rng(3)
-# colors = rng.uniform(0, 255, size=(len(class_names), 3))
+# HanLP = hanlp.load(hanlp.pretrained.mtl.CLOSE_TOK_POS_NER_SRL_DEP_SDP_CON_ELECTRA_SMALL_ZH,
+#                    output_key='ner',input_key='tok')
+HanLP = hanlp.pipeline() \
+    .append(hanlp.load('FINE_ELECTRA_SMALL_ZH'), output_key='tok') \
+    .append(hanlp.load('MSRA_NER_ELECTRA_SMALL_ZH'), output_key='ner', input_key='tok') \
+    # HanLP = hanlp.load('MSRA_NER_ELECTRA_SMALL_ZH')
 
 
 def nms(boxes, scores, iou_threshold):
@@ -148,17 +140,10 @@ class YOLOv8:
     def inference(self, input_tensor):
         start = time.perf_counter()
         outputs = self.session.run(self.output_names, {self.input_names[0]: input_tensor})
-
-        # print(f"Inference time: {(time.perf_counter() - start)*1000:.2f} ms")
         return outputs
 
     def process_output(self, output):
         predictions = np.squeeze(output[0]).T
-        # masks = output[0][:, 84:]
-        # output1 = np.squeeze(output[1])
-        # output1 = output1.reshape(output1.shape[0], -1)
-        # masks = masks @ output1
-        # Filter out object confidence scores below threshold
         scores = np.max(predictions[:, 4:], axis=1)
         predictions = predictions[scores > self.conf_threshold, :]
         scores = scores[scores > self.conf_threshold]
@@ -263,6 +248,43 @@ def run_segment(model_path, image_file_path, conf_thres):
                 points_list.append([merge_mask, res_class])
         points_list_all.append(points_list)
     return points_list_all
+
+
+def run_span(text):
+
+    replacements = {
+        '\n': '#',
+        "(": '#',
+        ")": '#',
+        "（": '#',
+        "）": '#',
+        "《": '#',
+        "》": '#',
+        " ": '#',
+    }
+
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+
+    tok_list = HanLP(text)["tok"]
+    ner_list = HanLP(text)["ner"]
+    start = 0
+    end = len(tok_list[0])
+    new_tok_list = [{"word": tok_list[0], "start": start, "end": end, "id": 0}]
+    i = 0
+    for tok in tok_list[1:]:
+        start = end
+        end = start + len(tok)
+        i += 1
+        new_tok_list.append({"word": tok, "start": start, "end": end, "id": i})
+        # print(f"Word: {tok}, Start: {start}, End: {end}")
+    # print(new_tok_list)
+    res_list = []
+    for ner in ner_list:
+        start = new_tok_list[ner[2]]["start"]
+        end = new_tok_list[ner[3] - 1]["end"]
+        res_list.append([ner[0], ner[1], start, end])
+    return res_list
 
 
 if __name__ == '__main__':

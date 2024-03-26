@@ -12,4 +12,8 @@ export class DetectApplicationService {
     public async segment(project_id: number, example_id: number): Promise<void> {
       await this.repository.segment(project_id, example_id)
     }
+
+    public async span(project_id: number, example_id: number): Promise<void> {
+      await this.repository.span(project_id, example_id)
+    }
 }

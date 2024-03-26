@@ -13,8 +13,9 @@ from .views import (
     SpanListAPI,
     TextLabelDetailAPI,
     TextLabelListAPI,
-    DetectBoxListAPI,
-    SegmentBoxListAPI,
+    AutoDetectBoxListAPI,
+    AutoSegmentBoxListAPI,
+    AutoSpanListAPI,
 )
 
 urlpatterns = [
@@ -40,11 +41,7 @@ urlpatterns = [
     ),
     
     path(route="examples/<int:example_id>/bboxes", view=BoundingBoxListAPI.as_view(), name="bbox_list"),
-    path(
-        route="examples/<int:example_id>/bboxes/detect", 
-        view=DetectBoxListAPI.as_view(), 
-        name="detect_image",
-    ),
+
     path(
         route="examples/<int:example_id>/bboxes/<int:annotation_id>",
         view=BoundingBoxDetailAPI.as_view(),
@@ -55,6 +52,18 @@ urlpatterns = [
         route="examples/<int:example_id>/segments/<int:annotation_id>",
         view=SegmentationDetailAPI.as_view(),
         name="segmentation_detail",
+    ),
+    path(
+        route="examples/<int:example_id>/bboxes/detect", 
+        view=AutoDetectBoxListAPI.as_view(), 
+        name="auto_detect_image",
     ), 
-    path(route="examples/<int:example_id>/segments/detect", view=SegmentBoxListAPI.as_view(), name="segmentation_list"),
+    path(route="examples/<int:example_id>/segments/detect",
+         view=AutoSegmentBoxListAPI.as_view(), 
+         name="auto_segmentation_image"
+    ),
+    path(route="examples/<int:example_id>/spans/detect",
+         view=AutoSpanListAPI.as_view(), 
+         name="auto_spans_text"
+    ),
 ]
