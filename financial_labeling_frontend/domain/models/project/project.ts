@@ -38,8 +38,6 @@ export const canDefineCategory = (projectType: ProjectType): boolean => {
     DocumentClassification,
     IntentDetectionAndSlotFilling,
     ImageClassification,
-    // BoundingBox,
-    // Segmentation
   ].includes(projectType)
 }
 
@@ -150,7 +148,6 @@ export class Project {
   get canDefineSegments(): boolean {
     return canDefineSegments(this.projectType)
   }
-
 
   get canDefineSpan(): boolean {
     return canDefineSpan(this.projectType)

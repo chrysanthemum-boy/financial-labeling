@@ -126,7 +126,11 @@ export default Vue.extend({
         }
       } else if (this.project.canDefineCategory) {
         return 'category'
-      } else {
+      } else if (this.project.canDefineSegments){
+        return 'category'
+      } else if (this.project.canDefineBoundingbox){
+        return 'category'
+      } else{
         return 'span'
       }
     },
@@ -142,6 +146,10 @@ export default Vue.extend({
           return [this.$services.spanType, this.$services.relationType][this.tab!]
         }
       } else if (this.project.canDefineCategory) {
+        return this.$services.categoryType
+      } else if (this.project.canDefineSegments){
+        return this.$services.categoryType
+      } else if (this.project.canDefineBoundingbox){
         return this.$services.categoryType
       } else {
         return this.$services.spanType
