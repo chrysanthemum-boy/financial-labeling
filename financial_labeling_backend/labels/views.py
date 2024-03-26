@@ -269,8 +269,9 @@ class AutoSpanListAPI(BaseListAPI):
     serializer_class = SpanSerializer
 
     def get_queryset(self):
+        project_id = self.kwargs["project_id"]
         example_id = self.kwargs["example_id"]
-
+        
         text = Example.objects.get(id=example_id).text
         
         ner_res = run_span(text)
@@ -278,7 +279,7 @@ class AutoSpanListAPI(BaseListAPI):
         if Span.objects.filter(example_id=example_id):
             span_objects = get_list_or_404(Span, example_id=example_id)
             for i in range(len(ner_res)):
-                id = SpanType.objects.get(text=ner_res[i][1]).id
+                id = SpanType.objects.get(text=ner_res[i][1], project_id=project_id).id
                 if i < len(span_objects):
                     span_objects[i].start_offset = ner_res[i][2]
                     span_objects[i].end_offset = ner_res[i][3]
@@ -296,7 +297,7 @@ class AutoSpanListAPI(BaseListAPI):
                     )
         else:
             for i in range(len(ner_res)):
-                id = SpanType.objects.get(text=ner_res[i][1]).id
+                id = SpanType.objects.get(text=ner_res[i][1], project_id=project_id).id
                 Span.objects.create(
                     start_offset=ner_res[i][2],
                     end_offset=ner_res[i][3],

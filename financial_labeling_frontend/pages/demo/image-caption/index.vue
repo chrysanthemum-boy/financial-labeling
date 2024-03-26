@@ -109,7 +109,7 @@ export default {
           }
         ],
         meta: {
-          url: 'https://github.com/Hironsan'
+          url: 'https://github.com/chrysanthemum-boy/financial-labeling'
         },
         annotation_approver: null
       }
