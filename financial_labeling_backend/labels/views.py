@@ -160,7 +160,7 @@ class AutoDetectBoxListAPI(BaseListAPI):
         image_dir_path = os.getcwd() + "/media/"
         example = get_object_or_404(Example, id=example_id)
         catagory_types = get_list_or_404(CategoryType, project_id=project_id)
-
+        
         id_text_dic_list = []
         for catagory_type in catagory_types:
             id = catagory_type.id
@@ -182,7 +182,7 @@ class AutoDetectBoxListAPI(BaseListAPI):
                         bboxes[i].height = abs(res[i][2][3] - res[i][2][1])
                         bboxes[i].example_id = example_id
                         bboxes[i].label_id = id_text_dic_list[res[i][0]]["id"]
-                        bboxes[i].user_id = 1
+                        bboxes[i].user_id = self.request.user.id
                         bboxes[i].save()
                 else:
                     if res[i][2][0] >= 0 and res[i][2][1] >= 0:
@@ -194,7 +194,7 @@ class AutoDetectBoxListAPI(BaseListAPI):
                             height=res[i][2][3] - res[i][2][1],
                             example_id=example_id,
                             label_id=id_text_dic_list[res[i][0]]["id"],
-                            user_id=1,
+                            user_id=self.request.user.id,
                         )
         else:
             res = run_detect(model_path, image_dir_path + file_name, 0.3, 0.3)
@@ -208,7 +208,7 @@ class AutoDetectBoxListAPI(BaseListAPI):
                         height=res[i][2][3] - res[i][2][1],
                         example_id=example_id,
                         label_id=id_text_dic_list[res[i][0]]["id"],
-                        user_id=1,
+                        user_id=self.request.user.id,
                     )
         queryset = super().get_queryset()
         return queryset
@@ -242,14 +242,14 @@ class AutoSegmentBoxListAPI(BaseListAPI):
                     segments[i].points = res[0][i][0]
                     segments[i].example_id = example_id
                     segments[i].label_id = id_text_dic_list[res[0][i][1]]["id"]
-                    segments[i].user_id = 1
+                    segments[i].user_id = self.request.user.id
                     segments[i].save()
                 else:
                     Segmentation.objects.create(
                         points=res[0][i][0],
                         example_id=example_id,
                         label_id=id_text_dic_list[res[0][i][1]]["id"],
-                        user_id=1,
+                        user_id=self.request.user.id,
                     )
         else:
             res = run_segment(model_path, image_dir_path + file_name, 0.3)
@@ -258,7 +258,7 @@ class AutoSegmentBoxListAPI(BaseListAPI):
                     points=res[0][i][0],
                     example_id=example_id,
                     label_id=id_text_dic_list[res[0][i][1]]["id"],
-                    user_id=1,
+                    user_id=self.request.user.id,
                 )
         queryset = super().get_queryset()
         return queryset
@@ -285,7 +285,7 @@ class AutoSpanListAPI(BaseListAPI):
                     span_objects[i].end_offset = ner_res[i][3]
                     span_objects[i].example_id = example_id
                     span_objects[i].label_id = id
-                    span_objects[i].user_id = 1
+                    span_objects[i].user_id = self.request.user.id
                     span_objects[i].save()
                 else:
                     Span.objects.create(
@@ -293,7 +293,7 @@ class AutoSpanListAPI(BaseListAPI):
                         end_offset=ner_res[i][3],
                         example_id=example_id,
                         label_id=id,
-                        user_id=1,
+                        user_id=self.request.user.id,
                     )
         else:
             for i in range(len(ner_res)):
@@ -303,6 +303,6 @@ class AutoSpanListAPI(BaseListAPI):
                     end_offset=ner_res[i][3],
                     example_id=example_id,
                     label_id=id,
-                    user_id=1,
+                    user_id=self.request.user.id,
                 )
         return super().get_queryset()
